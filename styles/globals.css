@@ -1,26 +1,35 @@
+/* For testing only */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato&family=Lemon&display=swap');
+
+:root {
+  --bgColor: #121212;
+  --fontColor: #ffffff;
+
+  --headerWidth: 100%;
+  --headerHeight: 80vh;
+
+  --subFontColor: #C8C8C8;
+  --defaultFont: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  --defaultHeaderTitleSize: 32px;
+  --defaultHeaderDescSize: 20px;
+
+  --defaultButtonSize: 20px;
+  --defaultBadgesSize: 18px;
+
+  --carouselItemWidth: 147px;
+  --carouselItemHeight: 231px;
+
+  --sectionTitleFontSize: 32px;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  background-color: var(--bgColor);
+  color: var(--fontColor);
 
-* {
-  box-sizing: border-box;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-  body {
-    color: white;
-    background: black;
-  }
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
