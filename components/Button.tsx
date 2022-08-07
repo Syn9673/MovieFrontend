@@ -9,6 +9,7 @@ interface ButtonProps  {
   centered?: boolean
 
   filled?: boolean
+  fullWidth?: boolean
 }
 
 interface IColors {
@@ -107,7 +108,8 @@ const Button = (
     filled,
     disabled,
     onClick,
-    ...props 
+    fullWidth,
+    ...props
   }: ButtonProps & JSX.IntrinsicElements['button']
 ) => {
   const [style, setStyle] = useState(
@@ -147,6 +149,8 @@ const Button = (
       {...props}
       style={
         {
+          width: fullWidth ? '100%' : undefined,
+
           ...(props.style),
           ...style,
 

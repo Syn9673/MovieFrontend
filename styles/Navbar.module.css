@@ -1,27 +1,6 @@
-.navContainer {
-  position: fixed;
-  top: 0;
-
-  width: 100%;
-
-  z-index: 999999;
-  font-size: 32px;
-
-  display: flex;
-  flex-direction: row;
-
-  transition: ease-in-out .2s;
-  gap: 20px;
-
-  padding: 32px;
-}
-
 .nav {
-  position: fixed;
-  top: 0;
-
   width: 100%;
-  z-index: 999999;
+  z-index: 2;
 
   padding-top: var(--navPaddingY);
   padding-bottom: var(--navPaddingY);
@@ -36,6 +15,7 @@
   flex-direction: row;
 
   box-sizing: border-box;
+  top: 0;
 }
 
 .nav .navLeft {

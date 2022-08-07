@@ -6,14 +6,30 @@ import styles from '../styles/Navbar.module.css'
 
 import Link from 'next/link'
 import { useColorMode } from '@chakra-ui/react'
+
 import colors from '../src/colors'
 
-const Navbar = () => {
+interface NavbarProps {
+  onClickSearch: () => void
+  position?: 'fixed' | 'sticky'
+
+  forceShadow?: boolean
+  noTransparent?: boolean
+}
+
+const Navbar = (
+  {
+    onClickSearch,
+    position = 'fixed',
+    forceShadow,
+    noTransparent
+  }: NavbarProps
+) => {
   const [navNotSeen, setNavNotSeen] = useState(false),
     ref = useRef<HTMLDivElement>(),
     { colorMode } = useColorMode(),
     onScroll = () => setNavNotSeen(
-      !(window.scrollY < (ref.current?.clientHeight ?? 0) / 2)
+      !(window.scrollY <= 0)
     )
 
   useEffect(
@@ -30,19 +46,19 @@ const Navbar = () => {
       className={styles.nav}
       style={
         { 
-          color: !navNotSeen && colorMode === 'light' ? 'white' : undefined,
-          backgroundColor: navNotSeen ? (
+          color: !navNotSeen && !noTransparent && colorMode === 'light' ? 'white' : undefined,
+          backgroundColor: noTransparent || navNotSeen ? (
             colorMode === 'dark' ?
               colors.dark :
               colors.light
           ) : 'transparent',
-          boxShadow: navNotSeen ? (
-            '0px 2px 10px ' + (
-              colorMode === 'dark' ?
-                colors.dark :
-                colors.light
+
+          boxShadow: forceShadow || navNotSeen ? (
+            '0px 2px 15px ' + (
+              colors.shadow
             )
-          ) : 'none'
+          ) : 'none',
+          position
         }
       }
     >
@@ -56,7 +72,10 @@ const Navbar = () => {
 
       <div className={styles.navRight}>
         <div className={styles.icon}>
-          <FontAwesomeIcon icon={faSearch}/>
+          <FontAwesomeIcon
+            icon={faSearch}
+            onClick={onClickSearch}
+          />
         </div>
 
         <div>

@@ -100,11 +100,12 @@
   height: var(--carouselItemHeight);
 
   transition: ease-in-out .2s;
+  cursor: pointer;
 }
 
 .carouselItem > img {
   width: 100%;
-  height: auto;
+  height: var(--carouselItemHeight);
 
   object-fit: cover;
 }
@@ -123,12 +124,20 @@
   .content .badges, .content .desc {
     display: none !important;
   }
+
+  .content .title {
+    line-height: var(--defaultHeaderTitleSize);
+  }
 }
 
 /* Galaxy Fold or Super Small heights */
 @media (max-width: 300px) or (max-height: 680px) {
   .content .buttons > * {
     font-size: .8em !important;
+  }
+
+  .content .title {
+    line-height: var(--defaultHeaderTitleSize);
   }
 }
 
@@ -186,7 +195,7 @@
     gap: 20px;
   }
 
-  .carouselItem {
+  .carouselItem, .carouselItem > img {
     width: calc(
       var(--carouselItemWidth) * 2
     );
@@ -251,7 +260,7 @@
     border-radius: 30px;
   }
 
-  .carouselItem {
+  .carouselItem, .carouselItem > img {
     width: calc(
       var(--carouselItemWidth) * 2.5
     );
@@ -295,7 +304,7 @@
     gap: 20px;
   }
 
-  .carouselItem {
+  .carouselItem, .carouselItem > img {
     width: calc(
       var(--carouselItemWidth) * 4
     );

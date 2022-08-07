@@ -2,29 +2,75 @@ import Button from '../components/Button'
 import Badge from '../components/Badge'
 
 import styles from '../styles/Index.module.css'
-import { Swiper, SwiperSlide } from 'swiper/react'
-
-import { Navigation, Pagination } from 'swiper'
 import Navbar from '../components/Navbar'
-
-import { useColorMode } from '@chakra-ui/react'
 
 import colors from '../src/colors'
 import ChangeTheme from '../components/ChangeTheme'
 
-const IndexPage = () => {
-  const { colorMode } = useColorMode()
+import Search from '../components/Search'
+import { useEffect, useState } from 'react'
 
-  return (
+import Section from '../components/Section'
+import { useColorMode } from '@chakra-ui/react'
+
+import { IVideoData } from '../src/types'
+import axios from 'axios'
+
+const MAX_DESC_IN_HEADER = 250;
+
+const IndexPage = (
+  { pinned, upcoming, main }: {
+    pinned: IVideoData[],
+    upcoming: IVideoData[],
+    main: IVideoData[]
+  }
+) => {
+  const { colorMode } = useColorMode(),
+    [searchShown, setSearchShown] = useState(false),
+    [video, setVideo] = useState<IVideoData>(null as any),
+    [hasLoaded, setHasLoaded] = useState(false),
+    onCloseSearch = () => setSearchShown(false),
+    onClickItem = (item: IVideoData) => {
+      if (item._id === video._id) return
+
+      setVideo(item)
+      window.scroll(
+        {
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        }
+      )
+    }
+
+  useEffect(
+    () => {
+      const randNumber = Math.floor(Math.random() * main.length),
+        rand = main[randNumber]
+
+      setVideo(rand)
+      setHasLoaded(true)
+    },
+    []
+  )
+
+  return hasLoaded ? (
     <>
-      <Navbar />
+      <Navbar
+        onClickSearch={() => setSearchShown(true)}
+      />
       <ChangeTheme />
+      
+      <Search
+        isOpen={searchShown}
+        onClose={onCloseSearch}
+      />
 
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.bg}>
             <img
-              src='/wandavision_thumbnail.jpg'
+              src={video.images?.thumbnail ?? ''}
             />
           </div>
 
@@ -42,21 +88,34 @@ const IndexPage = () => {
           >
             <div className={styles.content}>
               <div className={styles.title}>
-                Wanda Vision
+                {video.meta.title}
               </div>
 
-              <div className={styles.badges}>
-                <Badge color='green'>
-                  HD
-                </Badge>
-
-                <Badge color='green'>
-                  Captions
-                </Badge>
-              </div>
+              {
+                video.badges ? (
+                  <div className={styles.badges}>
+                    {
+                      video.badges?.map(
+                        (badge, index) => (
+                          <Badge
+                            color='green'
+                            key={index}
+                          >
+                            {badge}
+                          </Badge>
+                        )
+                      )
+                    }
+                  </div>
+                ) : null
+              }
 
               <div className={styles.desc}>
-                Marvel Studios' WandaVision blends the style of classic sitcoms with the Marvel Cinematic Universe in which Wanda Maximoff and Vision – two superpowered beings living their ideal suburban life – begin to suspect that everything is not as it seems.
+                {
+                  video.meta.desc?.substring(0, MAX_DESC_IN_HEADER) + (
+                    (video.meta.desc?.length ?? 0) > MAX_DESC_IN_HEADER ? '...' : ''
+                  )
+                }
               </div>
 
               <div className={styles.buttons}>
@@ -73,98 +132,49 @@ const IndexPage = () => {
         </div>
 
         <div className={styles.bodyContent}>
-          <div className={styles.section}>
-            <div className={styles.sectionTitle}>
-              Pinned Content
-            </div>
-            
-            <div>
-              <Swiper 
-                slidesPerView='auto'
-                spaceBetween={10}
-                pagination={
-                  {
-                    clickable: true,
-                    dynamicBullets: true
-                  }
-                }
-                navigation
-                modules={
-                  [Navigation, Pagination]
-                }
-              >
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/ms_marvel.jpg' />
-                </SwiperSlide>
+          <Section
+            data={pinned}
+            title='Pinned Shows & Movies'
+            onClickItem={onClickItem}
+          />
 
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/hawkeye.jpg' />
-                </SwiperSlide>
+          <Section
+            data={upcoming}
+            title='Upcoming Shows & Movies'
+            onClickItem={onClickItem}
+          />
 
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/far_from_home.jpg' />
-                </SwiperSlide>
-
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/whatif.jpg' />
-                </SwiperSlide>
-
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/sod.png' />
-                </SwiperSlide>
-              </Swiper>
-            </div>
-          </div>
-
-          <div className={styles.section}>
-            <div className={styles.sectionTitle}>
-              Upcoming Content
-            </div>
-
-            <div>
-              <Swiper 
-                slidesPerView='auto'
-                spaceBetween={10}
-                pagination={
-                  {
-                    clickable: true,
-                    dynamicBullets: true
-                  }
-                }
-                navigation
-                modules={
-                  [
-                    Navigation,
-                    Pagination
-                  ]
-                }
-              >
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/ms_marvel.jpg' />
-                </SwiperSlide>
-
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/hawkeye.jpg' />
-                </SwiperSlide>
-
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/far_from_home.jpg' />
-                </SwiperSlide>
-
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/whatif.jpg' />
-                </SwiperSlide>
-
-                <SwiperSlide className={styles.carouselItem}>
-                  <img src='/sod.png' />
-                </SwiperSlide>
-              </Swiper>
-            </div>
-          </div>
+          <Section
+            data={main}
+            title='Top 20 Shows & Movies'
+            onClickItem={onClickItem}
+          />
         </div>
       </div>
     </>
-  )
+  ) : null
 }
+
+const getServerSideProps = async () => {
+  try {
+    const res = await axios(`${process.env.API_URL}/content`),
+      content = res.data?.value as (
+        {
+          otherVideos: IVideoData[]
+          mainVideos: IVideoData[]
+        }
+      ),
+      main = content?.mainVideos ?? [],
+      pinned = content?.mainVideos?.filter((val) => val.misc?.pinned),
+      upcoming = content?.mainVideos?.filter((val) => val.misc?.upcoming)
+
+
+    return { props: { main, pinned, upcoming } }
+  } catch {
+    return { props: {} }
+  }
+}
+
+export { getServerSideProps }
 
 export default IndexPage
