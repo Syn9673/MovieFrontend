@@ -120,7 +120,6 @@ const Button = (
     <button
       onMouseEnter={
         () => {
-          if (filled) return
           setStyle(
             buttonStyle(
               { color, filled: true, shadow: true }
@@ -130,10 +129,9 @@ const Button = (
       }
       onMouseLeave={
         () => {
-          if (filled) return
           setStyle(
             buttonStyle(
-              { color }
+              { color, filled }
             )
           )
         }

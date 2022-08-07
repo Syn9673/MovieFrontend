@@ -1,0 +1,72 @@
+.navContainer {
+  position: fixed;
+  top: 0;
+
+  width: 100%;
+
+  z-index: 999999;
+  font-size: 32px;
+
+  display: flex;
+  flex-direction: row;
+
+  transition: ease-in-out .2s;
+  gap: 20px;
+
+  padding: 32px;
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+
+  width: 100%;
+  z-index: 999999;
+
+  padding-top: var(--navPaddingY);
+  padding-bottom: var(--navPaddingY);
+  
+  padding-left: var(--navPaddingX);
+  padding-right: var(--navPaddingX);
+
+  font-size: var(--navFontSize);
+  transition: ease-in-out .2s;
+
+  display: flex;
+  flex-direction: row;
+
+  box-sizing: border-box;
+}
+
+.nav .navLeft {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.nav .navRight {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: flex-end;
+  width: 100%;
+
+  gap: var(--navFontSize);
+}
+
+.navRight > * {
+  cursor: pointer;
+}
+
+.navLeft .title {
+  font-family: 'Bebas Neue';
+  cursor: pointer;
+}
+
+@media (max-height: 420px) {
+  .navLeft .title, .navRight .hideableIcon {
+    display: none;
+  }
+}

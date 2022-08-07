@@ -2,7 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Lato&family=Lemon&display=swap');
 
 :root {
-  --bgColor: #121212;
   --fontColor: #ffffff;
 
   --headerWidth: 100%;
@@ -21,6 +20,10 @@
   --carouselItemHeight: 231px;
 
   --sectionTitleFontSize: 32px;
+  --navFontSize: 32px;
+
+  --navPaddingY: 8px;
+  --navPaddingX: 32px;
 }
 
 html,
@@ -28,8 +31,6 @@ body {
   padding: 0;
   margin: 0;
 
-  background-color: var(--bgColor);
   color: var(--fontColor);
-
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--defaultFont);
 }

@@ -26,8 +26,6 @@
 
   width: var(--headerWidth);
   height: var(--headerHeight);
-
-  box-shadow: inset 0 -30px 15px -10px #121212;
 }
 
 .overlay .content {
@@ -48,6 +46,7 @@
   font-family: 'Bebas Neue';
 
   text-shadow: 4px 5px 4px black;
+  color: white;
 }
 
 .content .desc {
@@ -121,7 +120,7 @@
 }
 
 @media (max-height: 420px) {
-  .content .badges {
+  .content .badges, .content .desc {
     display: none !important;
   }
 }
