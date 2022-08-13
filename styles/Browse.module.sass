@@ -1,0 +1,136 @@
+$defaultHeaderTitleSize: 32px
+$defaultHeaderDescSize: 20px
+
+$carouselItemWidth: 147px
+$carouselItemHeight: 241px
+
+$sectionTitleFontSize: 32px
+
+.container
+  display: flex
+  flex-direction: column
+
+  .bodyContent
+    display: flex
+    flex-direction: column
+
+    margin: 20px
+
+    .section
+      display: flex
+      flex-direction: column
+
+      .sectionTitle
+        font-family: 'Bebas Neue'
+        font-size: $sectionTitleFontSize
+
+  .header 
+    width: 100%
+    height: 75vh
+
+    position: relative
+
+    .bg
+      *
+        width: 100%
+        height: 100%
+
+        object-position: center
+        object-fit: cover
+
+        position: absolute
+
+    .overlay
+      background-color: rgb(18, 18, 18, 0.2)
+      position: absolute
+
+      width: 100%
+      height: 100%
+
+      z-index: 2
+
+      .content
+        display: flex
+        flex-direction: column
+
+        width: 80%
+        height: 100%
+
+        margin: auto
+        justify-content: center
+
+        gap: 5px
+
+        .title
+          font-size: $defaultHeaderTitleSize
+          font-family: 'Bebas Neue'
+
+          text-shadow: 4px 5px 4px black
+          color: white
+
+        .desc
+          text-shadow: 2px 2px 4px black
+          max-width: 480px
+
+          font-family: 'Lato'
+          font-size: $defaultHeaderDescSize
+
+          color: #C8C8C8
+
+        .buttons
+          display: flex
+          flex-direction: row
+
+          gap: 5px
+
+          .button
+            font-size: 24px !important
+
+        .badges
+          display: flex
+          flex-direction: row
+
+          gap: 5px
+
+        @media (max-width: 420px) and (min-height: 360px)
+          .desc
+            font-size: .9em !important
+
+          .buttons
+            flex-direction: column !important
+
+        @media (max-height: 420px)
+          .desc,
+          .badges
+            display: none !important
+
+          .title
+            line-height: $defaultHeaderTitleSize
+
+        /* Galaxy Fold or Super Small heights */
+        @media (max-width: 300px) or (max-height: 680px)
+          .buttons
+            *
+              font-size: .6em !important
+
+          .title
+            line-height: $defaultHeaderTitleSize
+
+.carouselItem
+  width: $carouselItemWidth
+  height: $carouselItemHeight
+
+  transition: ease-in-out .2s
+  cursor: pointer
+
+  &:hover
+    transform: translateY(-10px)
+
+  &:active
+    transform: translateY(-5px)
+
+  img
+    width: 100%
+    height: $carouselItemHeight
+
+    z-index: 4

@@ -1,62 +1,15 @@
-import styles from '../styles/Badge.module.css'
+import styles from '../styles/Badge.module.sass'
+import colors from '../src/colors'
 
-interface BadgeProps  {
-  color?: string
-}
-
-interface IColors {
-  [key: string]: {
-    main: string
-    text: string
-  }
-}
-
-const colors: IColors  = {
-  red: {
-    main: '#F73939',
-    text: 'white'
-  },
-
-  purple: {
-    main: '#AA55FF',
-    text: 'white'
-  },
-
-  green: {
-    main: '#0BF275',
-    text: 'white'
-  },
-
-  cyan: {
-    main: '#39CAF7',
-    text: 'white'
-  },
-
-  blue: {
-    main: '#426AF8',
-    text: 'white'
-  },
-
-  brown: {
-    main: '#B26D58',
-    text: 'white'
-  },
-
-  orange: {
-    main: '#FF7628',
-    text: 'white'
-  },
-
-  default: {
-    main: '#2c2c2c',
-    text: 'white'
-  }
-}
+import { BadgeProps } from '../src/types/components'
 
 const Badge = (
-  { color, ...props }: BadgeProps & JSX.IntrinsicElements['div']
+  {
+    color,
+    ...props
+  }: BadgeProps & JSX.IntrinsicElements['div']
 ) => {
-  const colorChoice = colors[color ?? 'default'] ?? colors.default
+  const colorChoice = colors.palette[color ?? 'default'] ?? colors.palette.default
 
   return (
     <div

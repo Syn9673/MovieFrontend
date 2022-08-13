@@ -6,19 +6,16 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay
+  ModalOverlay,
+  useColorMode
 } from '@chakra-ui/react'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import Button from './Button'
 import Router from 'next/router'
 
-interface SearchProps {
-  isOpen: boolean
-  onClose: () => void
-
-  initial?: string
-}
+import colors from '../src/colors'
+import { SearchProps } from '../src/types/components'
 
 const Search = (
   {
@@ -28,8 +25,8 @@ const Search = (
     initial
   }: SearchProps
 ) => {
-  const ref = useRef(null),
-    [searchInput, setSearchInput] = useState(initial ?? ''),
+  const [searchInput, setSearchInput] = useState(initial ?? ''),
+    { colorMode } = useColorMode(),
     onClickSearch = () => {
       Router.push(
         `/browse/${searchInput}`
@@ -40,26 +37,29 @@ const Search = (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      initialFocusRef={ref}
       blockScrollOnMount={false}
       isCentered
     >
       <ModalOverlay style={{ outline: 'none' }} />
-      <ModalContent>
+      <ModalContent
+        borderRadius='0'
+        bg={
+          colorMode === 'dark' ?
+            colors.dark :
+            colors.light
+        }
+      >
         <ModalCloseButton />
 
         <ModalHeader>
-          Search for Content
+          Search for Shows & Videos
         </ModalHeader>
         
         <ModalBody>
           <Input
             placeholder='Content Title'
             size='lg'
-            ref={ref}
-            onChange={
-              (e) => setSearchInput(e.target.value)
-            }
+            onChange={(e) => setSearchInput(e.target.value)}
             value={searchInput}
           />
         </ModalBody>

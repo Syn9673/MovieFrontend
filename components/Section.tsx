@@ -1,16 +1,16 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination } from 'swiper'
 
-import styles from '../styles/Index.module.css'
+import styles from '../styles/Browse.module.sass'
 import { useColorMode } from '@chakra-ui/react'
 
-import { IVideoData } from '../src/types'
+import { VideoData } from '../src/types/data'
 
 interface SectionProps {
-  data: IVideoData[]
+  data: VideoData[]
   title: string
   
-  onClickItem: (item: IVideoData) => void
+  onClickItem: (item: VideoData) => void
 }
 
 const Section = (
@@ -59,7 +59,8 @@ const Section = (
                   }
                 >
                   <img
-                    src={value.images.poster}  
+                    src={value.images.poster}
+                    loading='lazy'
                   />
                 </SwiperSlide>
               )

@@ -1,70 +1,10 @@
-import styles from '../styles/Button.module.css'
+import styles from '../styles/Button.module.sass'
 import { useState } from 'react'
 
-interface ButtonProps  {
-  color?: string
-  disabled?: boolean
+import { ButtonProps } from '../src/types/components'
+import colors from '../src/colors'
 
-  icon?: JSX.Element
-  centered?: boolean
-
-  filled?: boolean
-  fullWidth?: boolean
-}
-
-interface IColors {
-  [key: string]: {
-    main: string
-    text: string
-
-    alwaysTextColor?: boolean
-  }
-}
-
-const colors: IColors  = {
-    red: {
-      main: '#F73939',
-      text: 'white'
-    },
-
-    purple: {
-      main: '#AA55FF',
-      text: 'white'
-    },
-
-    green: {
-      main: '#0BF275',
-      text: 'white'
-    },
-
-    cyan: {
-      main: '#39CAF7',
-      text: 'white'
-    },
-
-    blue: {
-      main: '#426AF8',
-      text: 'white'
-    },
-
-    brown: {
-      main: '#B26D58',
-      text: 'white'
-    },
-
-    orange: {
-      main: '#FF7628',
-      text: 'white'
-    },
-
-    default: {
-      main: '#2c2c2c',
-      text: 'white',
-
-      alwaysTextColor: true
-    }
-  },
-  buttonStyle = (
+const buttonStyle = (
     { color, filled, shadow, disabled }: {
       color?: string
       filled?: boolean
@@ -72,7 +12,7 @@ const colors: IColors  = {
       disabled?: boolean
     }
   ) => {
-    const palette = colors[color || 'default'] || colors.default
+    const palette = colors.palette[color || 'default'] || colors.palette.default
 
     return {
       padding: '10px 30px 10px 30px',
@@ -99,95 +39,94 @@ const colors: IColors  = {
         `0px 0px 15px ${palette.main}`
       ) : 'none'
     }
-  }
-
-const Button = (
-  {
-    centered,
-    color,
-    filled,
-    disabled,
-    onClick,
-    fullWidth,
-    ...props
-  }: ButtonProps & JSX.IntrinsicElements['button']
-) => {
-  const [style, setStyle] = useState(
-      buttonStyle(
-        { color, filled }
+  },
+  Button = (
+    {
+      centered,
+      color,
+      filled,
+      disabled,
+      onClick,
+      fullWidth,
+      ...props
+    }: ButtonProps & JSX.IntrinsicElements['button']
+  ) => {
+    const [style, setStyle] = useState(
+        buttonStyle(
+          { color, filled }
+        )
       )
-    )
 
-  return (
-    <button
-      onMouseEnter={
-        () => {
-          setStyle(
-            buttonStyle(
-              { color, filled: true, shadow: true }
+    return (
+      <button
+        onMouseEnter={
+          () => {
+            setStyle(
+              buttonStyle(
+                { color, filled: true, shadow: true }
+              )
             )
-          )
+          }
         }
-      }
-      onMouseLeave={
-        () => {
-          setStyle(
-            buttonStyle(
-              { color, filled }
+        onMouseLeave={
+          () => {
+            setStyle(
+              buttonStyle(
+                { color, filled }
+              )
             )
-          )
+          }
         }
-      }
 
-      onClick={
-        (e) => {
-          if (disabled || !onClick) return
-          onClick(e)
+        onClick={
+          (e) => {
+            if (disabled || !onClick) return
+            onClick(e)
+          }
         }
-      }
 
-      {...props}
-      style={
+        {...props}
+        style={
+          {
+            width: fullWidth ? '100%' : undefined,
+
+            ...(props.style),
+            ...style,
+
+            display: 'flex',
+            flexDirection: 'row',
+
+            flexWrap: 'wrap',
+            gap: '10px',
+
+            ...(
+              centered ? (
+                {
+                  justifyContent: 'center',
+                  alignItems: 'center',
+
+                  textAlign: 'center'
+                }
+              ) : {}
+            )
+          }
+        }
+
+        className={`${styles.btn} ${props.className ?? ''}`}
+      >
+        <div>
+          {props.children}
+        </div>
+
         {
-          width: fullWidth ? '100%' : undefined,
-
-          ...(props.style),
-          ...style,
-
-          display: 'flex',
-          flexDirection: 'row',
-
-          flexWrap: 'wrap',
-          gap: '10px',
-
-          ...(
-            centered ? (
-              {
-                justifyContent: 'center',
-                alignItems: 'center',
-
-                textAlign: 'center'
-              }
-            ) : {}
-          )
+          props.icon ? (
+            <div>
+              {props.icon}
+            </div>
+          ) : null
         }
-      }
-
-      className={`${styles.btn} ${props.className ?? ''}`}
-    >
-      <div>
-        {props.children}
-      </div>
-
-      {
-        props.icon ? (
-          <div>
-            {props.icon}
-          </div>
-        ) : null
-      }
-    </button>
-  )
-}
+      </button>
+    )
+  }
 
 export default Button

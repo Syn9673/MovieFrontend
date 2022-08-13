@@ -2,11 +2,11 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 
 import {
-  ChakraProvider, extendTheme
+  ChakraProvider, extendTheme, StyleFunctionProps
 } from '@chakra-ui/react'
  
 // styles
-import '../styles/globals.css'
+import '../styles/globals.sass'
 import 'swiper/css'
 
 import 'swiper/css/pagination'
@@ -18,7 +18,25 @@ const config = {
     initialColorMode: 'dark',
     useSystemColorMode: false,
   },
-  theme = extendTheme({ config })
+  theme = extendTheme(
+    {
+      config,
+      styles: {
+        global: (props: StyleFunctionProps) => ({
+          body: {
+            bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.200'
+          }
+        })
+      },
+      components: {
+        Text: {
+          baseStyle: {
+            fontFamily: 'Lato'
+          }
+        }
+      }
+    }
+  )
 
 const App = (
   { Component, pageProps } : AppProps

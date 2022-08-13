@@ -2,20 +2,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 
 import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons'
-import styles from '../styles/Navbar.module.css'
+import styles from '../styles/Navbar.module.sass'
 
 import Link from 'next/link'
-import { useColorMode } from '@chakra-ui/react'
+import { Box, useColorMode } from '@chakra-ui/react'
 
 import colors from '../src/colors'
-
-interface NavbarProps {
-  onClickSearch: () => void
-  position?: 'fixed' | 'sticky'
-
-  forceShadow?: boolean
-  noTransparent?: boolean
-}
+import { NavbarProps } from '../src/types/components'
 
 const Navbar = (
   {
@@ -26,7 +19,7 @@ const Navbar = (
   }: NavbarProps
 ) => {
   const [navNotSeen, setNavNotSeen] = useState(false),
-    ref = useRef<HTMLDivElement>(),
+    ref = useRef<HTMLDivElement>(null),
     { colorMode } = useColorMode(),
     onScroll = () => setNavNotSeen(
       !(window.scrollY <= 0)
@@ -41,8 +34,8 @@ const Navbar = (
   )
 
   return (
-    <div
-      ref={ref as any}
+    <Box
+      ref={ref}
       className={styles.nav}
       style={
         { 
@@ -62,27 +55,27 @@ const Navbar = (
         }
       }
     >
-      <div className={styles.navLeft}>
+      <Box className={styles.navLeft}>
         <Link href='/'>
-          <div className={styles.title}>
+          <Box className={styles.title}>
             CrackedFlix
-          </div>
+          </Box>
         </Link>
-      </div>
+      </Box>
 
-      <div className={styles.navRight}>
-        <div className={styles.icon}>
+      <Box className={styles.navRight}>
+        <Box className={styles.icon}>
           <FontAwesomeIcon
             icon={faSearch}
             onClick={onClickSearch}
           />
-        </div>
+        </Box>
 
-        <div>
+        <Box>
           <FontAwesomeIcon icon={faBars} />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   )
 }
 

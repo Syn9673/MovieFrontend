@@ -1,0 +1,53 @@
+$navPaddingY: 8px
+$navPaddingX: 32px
+  
+$navFontSize: 32px
+  
+.nav
+  width: 100%
+  z-index: 4
+
+  padding-top: $navPaddingY
+  padding-bottom: $navPaddingY
+  
+  padding-left: $navPaddingX
+  padding-right: $navPaddingX
+
+  font-size: $navFontSize
+  transition: ease-in-out .2s
+
+  display: flex
+  flex-direction: row
+
+  box-sizing: border-box
+  top: 0
+
+  gap: 5px
+
+  .navLeft
+    display: flex
+    flex-direction: row
+
+    justify-content: flex-start
+    width: 100%
+
+    .title
+      font-family: 'Bebas Neue'
+      cursor: pointer
+
+  .navRight
+    display: flex
+    flex-direction: row
+
+    justify-content: flex-end
+    width: 100%
+
+    gap: $navFontSize
+
+    & > *
+      cursor: pointer
+
+@media (max-height: 420px)
+  .navLeft .title,
+  .navRight .hideableIcon
+    display: none

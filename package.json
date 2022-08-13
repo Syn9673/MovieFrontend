@@ -13,13 +13,18 @@
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-regular-svg-icons": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@hcaptcha/react-hcaptcha": "^1.4.4",
     "axios": "^0.27.2",
     "framer-motion": "^7.0.0",
+    "moment": "^2.29.4",
     "next": "12.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "sass": "^1.54.3",
+    "screenfull": "^6.0.2",
     "swiper": "^8.3.2"
   },
   "devDependencies": {
