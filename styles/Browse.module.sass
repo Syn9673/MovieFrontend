@@ -1,28 +1,65 @@
 $defaultHeaderTitleSize: 32px
 $defaultHeaderDescSize: 20px
 
-$carouselItemWidth: 147px
-$carouselItemHeight: 241px
-
+$carouselItemWidth: 240px
 $sectionTitleFontSize: 32px
+
+.episode
+  cursor: pointer
+  transition: ease-in-out .2s
+
+  &:hover
+    background-color: rgba(255, 255, 255, 0.075)
 
 .container
   display: flex
   flex-direction: column
 
+  align-items: center
+  justify-content: center
+
   .bodyContent
     display: flex
-    flex-direction: column
+    flex-direction: row
 
+    flex-wrap: wrap
     margin: 20px
+    
+    gap: 20px
+    justify-content: center
 
-    .section
-      display: flex
-      flex-direction: column
+    img
+      width: $carouselItemWidth
+      height: 100%
 
-      .sectionTitle
-        font-family: 'Bebas Neue'
-        font-size: $sectionTitleFontSize
+      transition: ease-in-out .2s
+      cursor: pointer
+
+      object-fit: cover
+
+      &:hover
+        transform: translateY(-10px)
+
+      &:active
+        transform: translateY(-5px)
+
+    @media (max-width: 420px) and (min-height: 360px)
+      $carouselItemWidth: 140px
+
+      img
+        width: $carouselItemWidth
+
+    @media (max-height: 720px)
+      $carouselItemWidth: 140px
+
+      img
+        width: $carouselItemWidth
+
+    @media (max-width: 300px) or (max-height: 680px)
+      $carouselItemWidth: 80px
+
+      img
+        width: $carouselItemWidth
 
   .header 
     width: 100%
@@ -115,22 +152,3 @@ $sectionTitleFontSize: 32px
 
           .title
             line-height: $defaultHeaderTitleSize
-
-.carouselItem
-  width: $carouselItemWidth
-  height: $carouselItemHeight
-
-  transition: ease-in-out .2s
-  cursor: pointer
-
-  &:hover
-    transform: translateY(-10px)
-
-  &:active
-    transform: translateY(-5px)
-
-  img
-    width: 100%
-    height: $carouselItemHeight
-
-    z-index: 4

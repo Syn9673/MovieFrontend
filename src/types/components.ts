@@ -18,6 +18,8 @@ interface VideoProps {
 
   autoPlay?: boolean
   noBackButton?: boolean
+
+  loop?: boolean
 }
 
 interface VideoTimerProps {

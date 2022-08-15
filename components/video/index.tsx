@@ -61,7 +61,8 @@ const Video = (
     src,
     controls = true,
     autoPlay,
-    noBackButton
+    noBackButton,
+    loop
   }: VideoProps
 ) => {
   // refs
@@ -96,9 +97,6 @@ const Video = (
         video.current.currentTime += value
     },
     onTimeUpdate = () => {
-      if (container.current)
-        container.current.focus()
-
       if (Date.now() > lastMouseMovement + 3000)
         setControlsHidden(true)
 
@@ -449,6 +447,7 @@ const Video = (
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         crossOrigin={crossOrigin}
+        loop={loop}
       >
         {
           captionsPath ? (

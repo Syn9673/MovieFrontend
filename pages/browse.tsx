@@ -1,33 +1,40 @@
 import styles from '../styles/Browse.module.sass'
-import { useColorMode } from '@chakra-ui/react'
+import { Box, Divider, Flex, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Text, useColorMode } from '@chakra-ui/react'
 
 import Video from '../components/video'
 import Button from '../components/Button'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Navbar from '../components/Navbar'
 
 import Search from '../components/Search'
-import { VideoData } from '../src/types/data'
+import { EpisodeData, VideoData } from '../src/types/data'
 
 import colors from '../src/colors'
 import Badge from '../components/Badge'
 
-import Section from '../components/Section'
 import axios from 'axios'
+import Router from 'next/router'
+
+import { deleteCookie, getCookie } from 'cookies-next'
+import { GetServerSideProps } from 'next'
+import ChangeTheme from '../components/ChangeTheme'
 
 const BrowsePage = (
-  { pinned, upcoming, main }: {
-    pinned: VideoData[],
-    upcoming: VideoData[],
-    main: VideoData[]
-  }
+  { content = [] }: { content: VideoData[] }
 ) => {
+  // refs
+  const container = useRef<HTMLDivElement>(null)
+
   //states
   const [data, setData] = useState<VideoData>(),
     [trailerTimeout, setTrailerTimeout] = useState<NodeJS.Timeout>(),
     [showVideo, setShowVideo] = useState(false),
     [searchOpen, setSearchOpen] = useState(false),
+    [modalOpen, setModalOpen] = useState(false),
+    [hasInteracted, setHasInteracted] = useState(false),
+    [season, setSeason] = useState(''),
+    [episodes, setEpisodes] = useState<EpisodeData[]>([]),
     { colorMode } = useColorMode()
 
   // Callbacks
@@ -43,12 +50,16 @@ const BrowsePage = (
           behavior: 'smooth'
         }
       )
+    },
+    onClickPlay = (video?: VideoData) => {
+      if (!video) return
+      Router.push(`/browse/${video._id}`)
     }
 
   useEffect(
     () => {
-      const randNumber = Math.floor(Math.random() * main.length),
-        rand = main[randNumber]
+      const randNumber = Math.floor(Math.random() * content.length),
+        rand = content[randNumber]
 
       setData(rand)
 
@@ -79,6 +90,8 @@ const BrowsePage = (
 
   return (
     <>
+      <ChangeTheme />
+
       <Navbar
         onClickSearch={() => setSearchOpen(true)}
       />
@@ -88,15 +101,153 @@ const BrowsePage = (
         onClose={() => setSearchOpen(false)}
       />
 
-      <div className={styles.container}>
+      <Modal
+        isOpen={modalOpen}
+        onClose={
+          () => {
+            setModalOpen(false)
+
+            setSeason('')
+            setEpisodes([])
+          }
+        }   
+      >
+        <ModalOverlay />
+        <ModalContent
+          borderRadius='0'
+        >
+          <img
+            src={data?.images?.thumbnail ?? ''}
+            alt='Header Image'
+            width='100%'
+          />
+
+          <ModalCloseButton />
+
+          <ModalHeader>
+            {data?.meta.title ?? 'No Title Provided.'}
+          </ModalHeader>
+
+          <Divider />
+
+          <ModalBody>
+            <Flex
+              flexDirection='column'
+              gap='2'
+            >
+              <Flex gap='2'>
+                {
+                  data?.badges?.map(
+                    (badge, index) => (
+                      <Badge
+                        color='green'
+                        key={index}
+                      >
+                        {badge}
+                      </Badge>
+                    )
+                  )
+                }
+              </Flex>
+
+              <Text>
+                {data?.meta.desc ?? 'No Description available.'}
+              </Text>
+              
+              {
+                data?.series ? (
+                  <Select
+                    placeholder='List of Seasons'
+                    onChange={
+                      (e) => {
+                        const season = parseInt(e.target.value || '1')
+
+                        setSeason(season.toString())
+                        setEpisodes(
+                          data?.series?.episodes[season - 1] ?? []
+                        )
+                      }
+                    }
+                  >
+                    {
+                      data.series?.episodes.map(
+                        (_, index) => (
+                          <option
+                            value={(index + 1).toString()}
+                            key={index}
+                          >
+                            Season {index + 1}
+                          </option>
+                        )
+                      )
+                    }
+                  </Select>
+                ) : null
+              }
+            </Flex>
+          </ModalBody>
+
+          <Divider />
+
+          { /* Episodes */ }
+          {
+            episodes.map(
+              (episode, index) => (
+                <Box
+                  key={index}
+                  className={styles.episode}
+                  padding='10px'
+                  paddingX='30px'
+                  onClick={
+                    () => Router.push(
+                      `/browse/${data?._id}?s=${season}&e=${index + 1}`
+                    )
+                  }
+                >
+                  <Flex flexDirection='column'>
+                    <Text
+                      fontFamily='Bebas Neue'
+                      fontSize='3xl'
+                    >
+                      {episode.title}
+                    </Text>
+
+                    <Text fontFamily='Lato' color='gray.400'>
+                      {episode.desc ?? 'No description provided.'}
+                    </Text>
+                  </Flex>
+                </Box>
+              )
+            )
+          }
+
+          <ModalFooter>
+            <Button
+              color='green'
+              fullWidth
+              centered
+              onClick={() => onClickPlay(data)}
+            >
+              Play
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      <div
+        className={styles.container}
+        ref={container}
+        onClick={() => setHasInteracted(true)}
+      >
         <div className={styles.header}>
           <div className={styles.bg}>
             {
-              showVideo ? (
+              showVideo && hasInteracted ? (
                 <Video
                   src={data?.trailer?.url ?? ''}
                   controls={false}
                   autoPlay
+                  loop
                 />
               ) : (
                 <img
@@ -156,6 +307,8 @@ const BrowsePage = (
                   color='cyan'
                   centered
                   className={styles.button}
+                  disabled={!data || !data.available}
+                  onClick={() => onClickPlay(data)}
                 >
                   Play
                 </Button>
@@ -164,6 +317,7 @@ const BrowsePage = (
                   color='purple'
                   centered
                   className={styles.button}
+                  onClick={() => setModalOpen(true)}
                 >
                   More Info
                 </Button>
@@ -172,24 +326,26 @@ const BrowsePage = (
           </div>
         </div>
 
+        <div>
+          <Heading>
+            Shows & Movies
+          </Heading>
+        </div>
+
         <div className={styles.bodyContent}>
-          <Section
-            data={pinned}
-            title='Pinned Shows & Movies'
-            onClickItem={onClickItem}
-          />
-
-          <Section
-            data={upcoming}
-            title='Upcoming Shows & Movies'
-            onClickItem={onClickItem}
-          />
-
-          <Section
-            data={main}
-            title='Top 20 Shows & Movies'
-            onClickItem={onClickItem}
-          />
+          {
+            content.map(
+              (video, index) => (
+                <div key={index}>
+                  <img
+                    src={video.images?.poster ?? ''}
+                    onClick={() => onClickItem(video)}
+                    loading='lazy'
+                  />
+                </div>
+              )
+            )
+          }
         </div>
       </div>
     </>
@@ -197,23 +353,36 @@ const BrowsePage = (
 }
 
 
-const getServerSideProps = async () => {
+const getServerSideProps: GetServerSideProps = async (context) => {
+  const token = getCookie(
+    'crackedflix-user-token',
+    {
+      req: context.req,
+      res: context.res
+    }
+  )
+
   try {
-    const res = await axios(`${process.env.API_URL}/content`),
-      content = res.data?.value as (
-        {
-          otherVideos: VideoData[]
-          mainVideos: VideoData[]
-        }
-      ),
-      main = content?.mainVideos ?? [],
-      pinned = content?.mainVideos?.filter((val) => val.misc?.pinned),
-      upcoming = content?.mainVideos?.filter((val) => val.misc?.upcoming)
+    const res = await axios(
+        `${process.env.API_URL}/videos`,
+        { headers: { authorization: token?.toString() ?? '' } }
+      )
 
+      const content = res.data?.value as VideoData[]
+      
+    return { props: { content } }
+  } catch(err) {  
+    const e = err as any
 
-    return { props: { main, pinned, upcoming } }
-  } catch {
-    return { props: {} }
+    if (e.response?.data?.userTokenInvalid)
+      deleteCookie('crackedflix-user-token')
+    
+    return {
+      props: {},
+      redirect: {
+        destination: '/auth'
+      }
+    }
   }
 }
 

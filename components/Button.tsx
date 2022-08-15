@@ -63,7 +63,7 @@ const buttonStyle = (
           () => {
             setStyle(
               buttonStyle(
-                { color, filled: true, shadow: true }
+                { color, filled: true, shadow: true, disabled }
               )
             )
           }
@@ -72,7 +72,7 @@ const buttonStyle = (
           () => {
             setStyle(
               buttonStyle(
-                { color, filled }
+                { color, filled, disabled }
               )
             )
           }
