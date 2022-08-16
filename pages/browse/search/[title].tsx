@@ -72,6 +72,7 @@ const SearchPage = (
       getVideos(query ?? title)
         .catch(console.error)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -130,7 +131,7 @@ const SearchPage = (
             videos.length > 0 ? (
               <>
                 <Heading>
-                  Search results for: '{query}'
+                  Search results for: &apos;{query}&apos;
                 </Heading>
 
                 <Flex
@@ -144,6 +145,7 @@ const SearchPage = (
                       (video, index) => (
                         (
                           <Image
+                            alt='Poster'
                             className={styles.result}
                             key={index}
                             src={video.images?.poster ?? ''}
@@ -163,7 +165,7 @@ const SearchPage = (
               </>
             ) : (
               <Text>
-                No videos match with: '{query}'
+                No videos match with: &apos;{query}&apos;
               </Text>
             )
           ) : (

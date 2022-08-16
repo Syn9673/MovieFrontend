@@ -48,6 +48,7 @@ const ContentModal = (
           fallbackSrc='https://via.placeholder.com/1920x1080'
           width='100%'
           borderTopRadius='md'
+          alt='Thumbnail'
         />
 
         <ModalCloseButton />

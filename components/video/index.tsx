@@ -435,9 +435,7 @@ const Video = (
             </Box>
           </>
         ) : null
-      }
-
-      
+      } 
  
       <video
         ref={video}
@@ -456,7 +454,7 @@ const Video = (
           captionsPath ? (
             <track
               ref={textTrack}
-              src={captionsPath}
+              src={captionsPath + '/english.vtt'}
               kind='captions'
               default
               srcLang='en'

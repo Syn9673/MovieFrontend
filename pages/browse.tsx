@@ -149,6 +149,7 @@ const BrowsePage = (
                 />
               ) : (
                 <Image
+                  alt='Thumbnail'
                   src={data?.images?.thumbnail ?? ''}
                   fallbackSrc='https://via.placeholder.com/1920x1080'
                 />
@@ -236,6 +237,7 @@ const BrowsePage = (
               (video, index) => (
                 <div key={index}>
                   <Image
+                    alt='Poster'
                     src={video.images?.poster ?? ''}
                     onClick={() => onClickItem(video)}
                     loading='lazy'
