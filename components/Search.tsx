@@ -17,21 +17,20 @@ import Router from 'next/router'
 import colors from '../src/colors'
 import { SearchProps } from '../src/types/components'
 
+import styles from '../styles/Input.module.sass'
+import CustomInput from './Input'
+
 const Search = (
   {
     isOpen,
     onClose,
 
-    initial
+    initial,
+    onSearch
   }: SearchProps
 ) => {
   const [searchInput, setSearchInput] = useState(initial ?? ''),
-    { colorMode } = useColorMode(),
-    onClickSearch = () => {
-      Router.push(
-        `/browse/${searchInput}`
-      )
-    }
+    { colorMode } = useColorMode()
 
   return (
     <Modal
@@ -56,11 +55,12 @@ const Search = (
         </ModalHeader>
         
         <ModalBody>
-          <Input
+          <CustomInput
             placeholder='Content Title'
             size='lg'
             onChange={(e) => setSearchInput(e.target.value)}
             value={searchInput}
+            className={styles.input}
           />
         </ModalBody>
 
@@ -71,7 +71,10 @@ const Search = (
             centered
             onClick={
               () => {
-                onClickSearch()
+                if (!onSearch)
+                  Router.push(`/browse/search/${searchInput}`)                
+                else onSearch(searchInput)
+                
                 onClose()
               }
             }

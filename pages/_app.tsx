@@ -2,7 +2,8 @@ import type { AppProps } from 'next/app'
 import Head from 'next/head'
 
 import {
-  ChakraProvider, extendTheme, StyleFunctionProps
+  Box,
+  ChakraProvider, extendTheme, Spinner, StyleFunctionProps, Text
 } from '@chakra-ui/react'
  
 // styles
@@ -13,6 +14,7 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
 import '@fortawesome/fontawesome-svg-core/styles.css'
+import { useEffect, useState } from 'react'
 
 const config = {
     initialColorMode: 'dark',
@@ -41,6 +43,13 @@ const config = {
 const App = (
   { Component, pageProps } : AppProps
 ) => {
+  const [hasLoaded, setHasLoaded] = useState(false)
+
+  useEffect(
+    () => setHasLoaded(true),
+    []
+  )
+
   return (
     <>
       <Head>
@@ -49,7 +58,24 @@ const App = (
       </Head>
 
       <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
+        {
+          hasLoaded ? (
+            <Component {...pageProps} />
+          ) : (
+            <Box
+              height='100vh'
+              display='flex'
+              flexDirection='column'
+              justifyContent='center'
+              alignItems='center'
+            >
+              <Spinner color='purple.500' size='xl' thickness='4px' />
+              <Text>
+                Loading...
+              </Text>
+            </Box>
+          )
+        }
       </ChakraProvider>
     </>
   )

@@ -55,13 +55,17 @@ const LoginPage = () => {
         if (res.data?.error)
           setErrorMessage(res.data.message ?? 'Request Failed')
         else if (!res.data?.error) { // success
-          setCookie('crackedflix-user-token', res.data.value)
+          setCookie(
+            'crackedflix-user-token',
+            res.data.value,
+            { maxAge: 60 * 60 * 24 }
+          )
 
           const message = isLogin ? (
               'logged in'
             ) : 'created your account'
+            
           setSuccessMessage(`Successfully ${message}. Redirecting...`)
-
           setTimeout(() => Router.push('/browse'), 2000)
         }
       } catch(e) {
@@ -142,7 +146,7 @@ const LoginPage = () => {
 
             <FormControl>
               <Flex align='center'>
-                <FormLabel>Don't have an account?</FormLabel>
+                <FormLabel>Don&apos;t have an account?</FormLabel>
                 <Switch
                   onChange={() => setIsLogin(!isLogin)}
                   isChecked={!isLogin}

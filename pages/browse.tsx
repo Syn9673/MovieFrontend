@@ -1,5 +1,9 @@
 import styles from '../styles/Browse.module.sass'
-import { Box, Divider, Flex, Heading, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Select, Text, useColorMode } from '@chakra-ui/react'
+import {
+  Heading,
+  Image,
+  useColorMode
+} from '@chakra-ui/react'
 
 import Video from '../components/video'
 import Button from '../components/Button'
@@ -18,7 +22,9 @@ import Router from 'next/router'
 
 import { deleteCookie, getCookie } from 'cookies-next'
 import { GetServerSideProps } from 'next'
+
 import ChangeTheme from '../components/ChangeTheme'
+import ContentModal from '../components/ContentModal'
 
 const BrowsePage = (
   { content = [] }: { content: VideoData[] }
@@ -69,6 +75,7 @@ const BrowsePage = (
 
       return () => clearTimeout(trailerTimeout)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -85,6 +92,7 @@ const BrowsePage = (
 
       return () => clearTimeout(trailerTimeout)
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [data]
   )
 
@@ -101,7 +109,7 @@ const BrowsePage = (
         onClose={() => setSearchOpen(false)}
       />
 
-      <Modal
+      <ContentModal
         isOpen={modalOpen}
         onClose={
           () => {
@@ -110,129 +118,19 @@ const BrowsePage = (
             setSeason('')
             setEpisodes([])
           }
-        }   
-      >
-        <ModalOverlay />
-        <ModalContent
-          borderRadius='0'
-        >
-          <img
-            src={data?.images?.thumbnail ?? ''}
-            alt='Header Image'
-            width='100%'
-          />
-
-          <ModalCloseButton />
-
-          <ModalHeader>
-            {data?.meta.title ?? 'No Title Provided.'}
-          </ModalHeader>
-
-          <Divider />
-
-          <ModalBody>
-            <Flex
-              flexDirection='column'
-              gap='2'
-            >
-              <Flex gap='2'>
-                {
-                  data?.badges?.map(
-                    (badge, index) => (
-                      <Badge
-                        color='green'
-                        key={index}
-                      >
-                        {badge}
-                      </Badge>
-                    )
-                  )
-                }
-              </Flex>
-
-              <Text>
-                {data?.meta.desc ?? 'No Description available.'}
-              </Text>
-              
-              {
-                data?.series ? (
-                  <Select
-                    placeholder='List of Seasons'
-                    onChange={
-                      (e) => {
-                        const season = parseInt(e.target.value || '1')
-
-                        setSeason(season.toString())
-                        setEpisodes(
-                          data?.series?.episodes[season - 1] ?? []
-                        )
-                      }
-                    }
-                  >
-                    {
-                      data.series?.episodes.map(
-                        (_, index) => (
-                          <option
-                            value={(index + 1).toString()}
-                            key={index}
-                          >
-                            Season {index + 1}
-                          </option>
-                        )
-                      )
-                    }
-                  </Select>
-                ) : null
-              }
-            </Flex>
-          </ModalBody>
-
-          <Divider />
-
-          { /* Episodes */ }
-          {
-            episodes.map(
-              (episode, index) => (
-                <Box
-                  key={index}
-                  className={styles.episode}
-                  padding='10px'
-                  paddingX='30px'
-                  onClick={
-                    () => Router.push(
-                      `/browse/${data?._id}?s=${season}&e=${index + 1}`
-                    )
-                  }
-                >
-                  <Flex flexDirection='column'>
-                    <Text
-                      fontFamily='Bebas Neue'
-                      fontSize='3xl'
-                    >
-                      {episode.title}
-                    </Text>
-
-                    <Text fontFamily='Lato' color='gray.400'>
-                      {episode.desc ?? 'No description provided.'}
-                    </Text>
-                  </Flex>
-                </Box>
-              )
+        }
+        data={data}
+        onSeasonChange={
+          (season) => {
+            setSeason(season.toString())
+            setEpisodes(
+              data?.series?.episodes[season - 1] ?? []
             )
           }
-
-          <ModalFooter>
-            <Button
-              color='green'
-              fullWidth
-              centered
-              onClick={() => onClickPlay(data)}
-            >
-              Play
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        }
+        episodes={episodes}
+        season={season}
+      />
 
       <div
         className={styles.container}
@@ -250,9 +148,9 @@ const BrowsePage = (
                   loop
                 />
               ) : (
-                <img
-                  placeholder='Thumbnail Image'
+                <Image
                   src={data?.images?.thumbnail ?? ''}
+                  fallbackSrc='https://via.placeholder.com/1920x1080'
                 />
               )
             }
@@ -337,10 +235,11 @@ const BrowsePage = (
             content.map(
               (video, index) => (
                 <div key={index}>
-                  <img
+                  <Image
                     src={video.images?.poster ?? ''}
                     onClick={() => onClickItem(video)}
                     loading='lazy'
+                    fallbackSrc='https://via.placeholder.com/140'
                   />
                 </div>
               )

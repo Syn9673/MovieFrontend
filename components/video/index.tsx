@@ -179,12 +179,15 @@ const Video = (
       if (video.current && !isNaN(video.current.duration))
         setDuration(video.current.duration)
 
-      container.current?.addEventListener('fullscreenchange', onFullScreenChange)
-      textTrack.current?.addEventListener('cuechange', onCueChange)
+      const videoContainer = container.current,
+        textTrackContainer = textTrack.current
+
+      videoContainer?.addEventListener('fullscreenchange', onFullScreenChange)
+      textTrackContainer?.addEventListener('cuechange', onCueChange)
       
       return () => {
-        container.current?.removeEventListener('fullscreenchange', onFullScreenChange)
-        textTrack.current?.removeEventListener('cuechange', onCueChange)
+        videoContainer?.removeEventListener('fullscreenchange', onFullScreenChange)
+        textTrackContainer?.removeEventListener('cuechange', onCueChange)
       }
     },
     []

@@ -1,4 +1,6 @@
 import { RefObject } from 'react'
+import type { InputProps } from '@chakra-ui/react'
+import { EpisodeData, VideoData } from './data'
 
 interface VideoProps {
   width?: number | string
@@ -55,6 +57,7 @@ interface SearchProps {
   onClose: () => void
 
   initial?: string
+  onSearch?: (input?: string) => void
 }
 
 interface CustomSliderProps {
@@ -77,6 +80,19 @@ interface CustomSliderProps {
   orientation?: 'horizontal' | 'vertical'
 }
 
+interface ContentModalProps {
+  isOpen: boolean
+  onClose: () => void
+
+  data?: VideoData
+  onSeasonChange?: (season: number) => void
+
+  episodes?: EpisodeData[]
+  onClickPlay?: (video?: VideoData) => void
+
+  season?: string | number
+}
+
 export type {
   VideoProps,
   VideoTimerProps,
@@ -87,5 +103,6 @@ export type {
   NavbarProps,
   SearchProps,
 
-  CustomSliderProps
+  CustomSliderProps,
+  ContentModalProps
 }

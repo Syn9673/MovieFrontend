@@ -118,6 +118,7 @@ const WatchVideo = (
       setCaptionUrl(getCaptionUrl())
       setVideoTitle(getVideoTitle())
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -128,6 +129,7 @@ const WatchVideo = (
 
       setVideoTitle(getVideoTitle())
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentEpisode, currentSeason]
   )
 
@@ -146,6 +148,7 @@ const WatchVideo = (
       videoTitle={videoTitle}
 
       autoPlay
+      crossOrigin='anonymous'
     />
   ) : null
 }

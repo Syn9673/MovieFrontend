@@ -55,7 +55,7 @@ const colors = {
   light: '#E2E8F0',
   dark: '#171923',
 
-  shadow: '#0e0e0e',
+  shadow: '#2e2e2e',
   palette
 }
 
