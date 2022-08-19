@@ -9,24 +9,30 @@ import {
   Flex,
   ModalBody,
   Text,
-  Select,
   Box,
-  ModalFooter
+  ModalFooter,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button
 } from '@chakra-ui/react'
 import { ContentModalProps } from '../src/types/components'
 
 import Badge from './Badge'
-import Button from './Button'
+import CustomButton from './Button'
 
 import Router from 'next/router'
 import styles from '../styles/ContentModal.module.sass'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 const ContentModal = (
   {
     isOpen,
     onClose,
     data,
-    onSeasonChange,
+    onSeasonChange = () => {},
     episodes = [],
     season
   }: ContentModalProps
@@ -82,32 +88,35 @@ const ContentModal = (
             <Text>
               {data?.meta.desc ?? 'No Description available.'}
             </Text>
-            
+
             {
               data?.series ? (
-                <Select
-                  placeholder='List of Seasons'
-                  onChange={
-                    (e) => {
-                      const season = parseInt(e.target.value || '1')
-                      if (onSeasonChange)
-                        onSeasonChange(season)
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rightIcon={
+                      <FontAwesomeIcon
+                        icon={faChevronDown}
+                      />
                     }
-                  }
-                >
-                  {
-                    data.series?.episodes.map(
-                      (_, index) => (
-                        <option
-                          value={(index + 1).toString()}
-                          key={index}
-                        >
-                          Season {index + 1}
-                        </option>
+                  >
+                    {season ? 'Season ' + season : 'List of Seasons'}
+                  </MenuButton>
+                  <MenuList>
+                    {
+                      data.series?.episodes.map(
+                        (_, index) => (
+                          <MenuItem
+                            key={index}
+                            onClick={() => onSeasonChange(index + 1)}
+                          >
+                            Season {index + 1}
+                          </MenuItem>
+                        )
                       )
-                    )
-                  }
-                </Select>
+                    }
+                  </MenuList>
+                </Menu>
               ) : null
             }
           </Flex>
@@ -148,14 +157,14 @@ const ContentModal = (
         }
 
         <ModalFooter>
-          <Button
+          <CustomButton
             color='green'
             fullWidth
             centered
             onClick={onClickPlay}
           >
             Play
-          </Button>
+          </CustomButton>
         </ModalFooter>
       </ModalContent>
     </Modal>

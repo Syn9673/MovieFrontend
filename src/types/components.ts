@@ -1,5 +1,4 @@
 import { RefObject } from 'react'
-import type { InputProps } from '@chakra-ui/react'
 import { EpisodeData, VideoData } from './data'
 
 interface VideoProps {
@@ -22,6 +21,7 @@ interface VideoProps {
   noBackButton?: boolean
 
   loop?: boolean
+  autoPlayNextOnFinish?: boolean
 }
 
 interface VideoTimerProps {

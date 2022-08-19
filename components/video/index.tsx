@@ -62,7 +62,8 @@ const Video = (
     controls = true,
     autoPlay,
     noBackButton,
-    loop
+    loop,
+    autoPlayNextOnFinish
   }: VideoProps
 ) => {
   // refs
@@ -168,6 +169,9 @@ const Video = (
           e.preventDefault()
           toggleFullScreen()
 
+          break
+
+        default:
           break
       }
     }
@@ -301,14 +305,24 @@ const Video = (
                     <Text>
                       <FontAwesomeIcon
                         icon={faCircleLeft}
-                        onClick={onPrev}
+                        onClick={
+                          () => {
+                            setCaptionsValue('')
+                            if (onPrev) onPrev()
+                          }
+                        }
                       />
                     </Text>
 
                     <Text>
                       <FontAwesomeIcon
                         icon={faCircleRight}
-                        onClick={onNext}
+                        onClick={
+                          () => {
+                            setCaptionsValue('')
+                            if (onNext) onNext()
+                          }
+                        }
                       />
                     </Text>
                   </Flex>
@@ -442,13 +456,18 @@ const Video = (
         onContextMenu={(e) => e.preventDefault()}
         src={src}
         autoPlay={autoPlay}
-        onClick={togglePlay}
         onDoubleClick={toggleFullScreen}
         onTimeUpdate={onTimeUpdate}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         crossOrigin={crossOrigin}
         loop={loop}
+        onEnded={
+          () => {
+            if (autoPlayNextOnFinish && onNext)
+              onNext()
+          }
+        }
       >
         {
           captionsPath ? (

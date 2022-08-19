@@ -11,7 +11,8 @@ import {
   Input,
   Switch,
   Text,
-  useColorMode
+  useColorMode,
+  useToast
 } from '@chakra-ui/react'
 
 import styles from '../styles/Login.module.sass'
@@ -25,31 +26,50 @@ import Router from 'next/router'
 const routes = [
   '/users?token=true',
   '/users/token'
-]
+],
+  TOAST_TIMEOUT = 5000
 
 const LoginPage = () => {
   // states
   const { colorMode } = useColorMode(),
     [errorMessage, setErrorMessage] = useState(''),
-    [email, setEmail] = useState(''),
+    [primaryField, setPrimaryField] = useState(''),
+    [secondaryField, setSecondaryField] = useState(''),
     [password, setPassword] = useState(''),
     [isLogin, setIsLogin] = useState(true),
-    [successMessage, setSuccessMessage] = useState('')
+    [successMessage, setSuccessMessage] = useState(''),
+    toast = useToast()
 
   // refs
   const hCaptcha = useRef<HCaptcha>(null)
 
   // callbacks
-  const onVerify = async (token: string) => {      
+  const onVerify = async (token: string) => {
+      const data: {
+        email?: string
+        username?: string
+
+        captchaResponse: string
+        password: string
+      } = {
+        captchaResponse: token,
+        password
+      }
+
+      if (isLogin) {
+        if (primaryField.match(/.+@.+\..+/g))
+          data.email = primaryField
+        else data.username = primaryField
+      } else {
+        data.username = primaryField
+        data.email = secondaryField
+      }
+    
       // send request here
       try {
         const res = await axios.post(
           process.env.API_URL + routes[Number(isLogin)],
-          {
-            captchaResponse: token,
-            email,
-            password
-          }
+          data
         )
         
         if (res.data?.error)
@@ -65,15 +85,32 @@ const LoginPage = () => {
               'logged in'
             ) : 'created your account'
             
-          setSuccessMessage(`Successfully ${message}. Redirecting...`)
+          toast(
+            {
+              title: 'Request successful',
+              description: `Successfully ${message}. Redirecting...`,
+              status: 'success',
+              duration: 5000,
+              isClosable: true,
+              position: 'bottom-right'
+            }
+          )
           setTimeout(() => Router.push('/browse'), 2000)
         }
       } catch(e) {
-        const err = e as any
+        const err = e as any,
+          msg = err.response?.data?.message ?? err.message ?? 'Something went wrong.'
 
-        if (err.response?.data?.message)
-          setErrorMessage(err.response.data.message)
-        else setErrorMessage(err.message)
+        toast(
+          {
+            title: 'Request Failed',
+            description: msg,
+            status: 'error',
+            duration: TOAST_TIMEOUT,
+            isClosable: true,
+            position: 'bottom-right'
+          }
+        )
       }
     },
     onButtonClick = () => {
@@ -82,6 +119,17 @@ const LoginPage = () => {
 
       setErrorMessage('')
       setSuccessMessage('')
+
+      toast(
+        {
+          title: 'Opening Captcha',
+          description: 'Attempting to open captcha.',
+          status: 'loading',
+          duration: TOAST_TIMEOUT,
+          isClosable: true,
+          position: 'bottom-right'
+        }
+      )
     }
     
 
@@ -97,12 +145,11 @@ const LoginPage = () => {
         padding='5px'
       >
         <Box
-          bg={
-            colorMode === 'dark' ? 'gray.700' : 'white'
-          }
-          boxSize='md'
+          bg={colorMode === 'dark' ? 'gray.700' : 'white'}
+          boxSize={isLogin ? 'md' : 'lg'}
           shadow='xl'
           paddingX='20px'
+          borderRadius='md'
         >
           <Flex
             flexDirection='column'
@@ -116,9 +163,7 @@ const LoginPage = () => {
               wrap='wrap'
             >
               <Heading>
-                {
-                  isLogin ? 'Login' : 'Sign Up'
-                }
+                {isLogin ? 'Login' : 'Sign Up'}
               </Heading>
 
               <Text color='gray.400'>
@@ -127,13 +172,30 @@ const LoginPage = () => {
             </Flex>
 
             <FormControl>
-              <FormLabel>Email Address</FormLabel>
+              <FormLabel>
+                {isLogin ? 'Username or Email' : 'Username'}
+              </FormLabel>
               <Input
-                type='email'
-                placeholder='user@example.com'
-                onChange={(e) => setEmail(e.target.value)}
+                type='username'
+                placeholder={isLogin ? 'Username or Email' : 'Username'}
+                onChange={(e) => setPrimaryField(e.target.value)}
               />
             </FormControl>
+
+            {
+              isLogin ? null : (
+                <FormControl>
+                  <FormLabel>
+                    Email Address
+                  </FormLabel>
+                  <Input
+                    type='email'
+                    placeholder='user@example.com'
+                    onChange={(e) => setSecondaryField(e.target.value)}
+                  />
+                </FormControl>
+              )
+            }
 
             <FormControl>
               <FormLabel>Password</FormLabel>
@@ -144,14 +206,15 @@ const LoginPage = () => {
               />
             </FormControl>
 
-            <FormControl>
-              <Flex align='center'>
-                <FormLabel>Don&apos;t have an account?</FormLabel>
-                <Switch
-                  onChange={() => setIsLogin(!isLogin)}
-                  isChecked={!isLogin}
-                />
-              </Flex>
+            <FormControl
+              display='flex'
+              alignItems='center'
+            >
+              <FormLabel mb='0'>Don&apos;t have an account?</FormLabel>
+              <Switch
+                onChange={() => setIsLogin(!isLogin)}
+                isChecked={!isLogin}
+              />
             </FormControl>
 
             <Flex
@@ -165,15 +228,30 @@ const LoginPage = () => {
                 ref={hCaptcha}
                 size='invisible'
                 onVerify={onVerify}
+                onError={console.error}
+                onOpen={
+                  () => {
+                    toast(
+                      {
+                        title: 'Captcha Opened',
+                        description: 'Captcha successfully opened.',
+                        status: 'success',
+                        duration: TOAST_TIMEOUT,
+                        isClosable: true,
+                        position: 'bottom-right'
+                      }
+                    )
+                  }
+                }
               />
 
               <Button
                 color='purple'
                 onClick={onButtonClick}
                 centered
-                style={{ width: '100%' }}
+                fullWidth
               >
-                Submit
+                {isLogin ? 'Login' : 'Signup'}
               </Button>
 
               {

@@ -46,7 +46,18 @@ const App = (
   const [hasLoaded, setHasLoaded] = useState(false)
 
   useEffect(
-    () => setHasLoaded(true),
+    () => {
+      setHasLoaded(true)
+
+      const timeout = setTimeout(
+        () => {
+          if (!hasLoaded)
+            setHasLoaded(true)
+        },
+        10 * 1000 // max timeout
+      )
+      return () => clearTimeout(timeout)
+    },
     []
   )
 
