@@ -149,6 +149,8 @@ const WatchVideo = (
 
       autoPlay
       crossOrigin='anonymous'
+
+      autoPlayNextOnFinish
     />
   ) : null
 }

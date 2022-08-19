@@ -16,6 +16,8 @@ import 'swiper/css/navigation'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { useEffect, useState } from 'react'
 
+import colors from '../src/colors'
+
 const config = {
     initialColorMode: 'dark',
     useSystemColorMode: false,
@@ -26,7 +28,7 @@ const config = {
       styles: {
         global: (props: StyleFunctionProps) => ({
           body: {
-            bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.200'
+            bg: props.colorMode === 'dark' ? colors.dark : 'gray.200'
           }
         })
       },
@@ -35,6 +37,14 @@ const config = {
           baseStyle: {
             fontFamily: 'Lato'
           }
+        },
+
+        Menu: {
+          baseStyle: (props: StyleFunctionProps) => ({
+            list: {
+              bg: props.colorMode === 'dark' ? colors.dark : 'gray.100'
+            }
+          })
         }
       }
     }

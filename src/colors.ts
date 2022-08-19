@@ -53,9 +53,12 @@ const palette: Palette  = {
 
 const colors = {
   light: '#E2E8F0',
-  dark: '#171923',
+  dark: '#121212',
 
-  shadow: '#2e2e2e',
+  shadow: '#121212',
+  darker: '#0C0C0C',
+
+  slightDark: '#151515',
   palette
 }
 

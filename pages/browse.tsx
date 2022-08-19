@@ -25,6 +25,8 @@ import { GetServerSideProps } from 'next'
 
 import ChangeTheme from '../components/ChangeTheme'
 import ContentModal from '../components/ContentModal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
 
 const BrowsePage = (
   { content = [] }: { content: VideoData[] }
@@ -203,22 +205,18 @@ const BrowsePage = (
 
               <div className={styles.buttons}>
                 <Button
-                  color='cyan'
-                  centered
-                  className={styles.button}
-                  disabled={!data || !data.available}
-                  onClick={() => onClickPlay(data)}
-                >
-                  Play
-                </Button>
-
-                <Button
                   color='purple'
                   centered
                   className={styles.button}
                   onClick={() => setModalOpen(true)}
+                  filled
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faCaretRight}
+                    />
+                  }
                 >
-                  More Info
+                  View More
                 </Button>
               </div>
             </div>

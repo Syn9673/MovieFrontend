@@ -22,6 +22,7 @@ import Button from '../components/Button'
 import { setCookie } from 'cookies-next'
 
 import Router from 'next/router'
+import colors from '../src/colors'
 
 const routes = [
   '/users?token=true',
@@ -145,7 +146,7 @@ const LoginPage = () => {
         padding='5px'
       >
         <Box
-          bg={colorMode === 'dark' ? 'gray.700' : 'white'}
+          bg={colorMode === 'dark' ? colors.slightDark : 'white'}
           boxSize={isLogin ? 'md' : 'lg'}
           shadow='xl'
           paddingX='20px'

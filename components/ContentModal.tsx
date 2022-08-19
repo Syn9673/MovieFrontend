@@ -15,7 +15,8 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Button
+  Button,
+  useColorMode
 } from '@chakra-ui/react'
 import { ContentModalProps } from '../src/types/components'
 
@@ -24,8 +25,11 @@ import CustomButton from './Button'
 
 import Router from 'next/router'
 import styles from '../styles/ContentModal.module.sass'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+
+import colors from '../src/colors'
 
 const ContentModal = (
   {
@@ -38,9 +42,10 @@ const ContentModal = (
   }: ContentModalProps
 ) => {
   const onClickPlay = () => {
-    if (!data) return
-    Router.push(`/browse/${data._id}`)
-  }
+      if (!data) return
+      Router.push(`/browse/${data._id}`)
+    },
+    { colorMode } = useColorMode()
 
   return (
     <Modal
@@ -48,7 +53,14 @@ const ContentModal = (
       onClose={onClose}
     >
       <ModalOverlay />
-      <ModalContent borderRadius='md'>
+      <ModalContent
+        borderRadius='md'
+        bg={
+          colorMode === 'dark' ?
+            colors.dark :
+            colors.light
+        }
+      >
         <Image
           src={data?.images?.thumbnail ?? ''}
           fallbackSrc='https://via.placeholder.com/1920x1080'

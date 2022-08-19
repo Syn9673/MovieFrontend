@@ -3,6 +3,7 @@ import {
   type InputProps,
   useColorMode
 } from '@chakra-ui/react'
+import colors from '../src/colors'
 
 const CustomInput = (props: InputProps) => {
   const { colorMode } = useColorMode()
@@ -20,13 +21,13 @@ const CustomInput = (props: InputProps) => {
           boxShadow: 'none',
           borderColor: 'white !important',
           color: colorMode === 'dark' ? 'white' : 'gray.700',
-          bgColor: colorMode === 'dark' ? 'gray.700' : 'gray.300'
+          bgColor: colorMode === 'dark' ? colors.darker : 'gray.300'
         }
       }
       _hover={
         {
           borderColor: 'white !important',
-          bgColor: colorMode === 'dark' ? 'gray.700' : 'gray.300',
+          bgColor: colorMode === 'dark' ? colors.darker : 'gray.300',
           color: colorMode === 'dark' ? 'white' : 'gray.700'
         }
       }

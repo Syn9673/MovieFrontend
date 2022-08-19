@@ -22,11 +22,11 @@ const Navbar = (
     ref = useRef<HTMLDivElement>(null),
     { colorMode } = useColorMode(),
     onScroll = () => setNavNotSeen(
-      !(window.scrollY <= 0)
+      !(window.scrollY <= (ref.current?.clientHeight ?? 0))
     )
 
   useEffect(
-    () => {      
+    () => {
       window.addEventListener('scroll', onScroll)
       return () => window.removeEventListener('scroll', onScroll)
     },
@@ -42,7 +42,7 @@ const Navbar = (
           color: !navNotSeen && !noTransparent && colorMode === 'light' ? 'white' : undefined,
           backgroundColor: noTransparent || navNotSeen ? (
             colorMode === 'dark' ?
-              colors.dark :
+              colors.darker :
               colors.light
           ) : 'transparent',
 

@@ -41,7 +41,7 @@ const Search = (
     >
       <ModalOverlay style={{ outline: 'none' }} />
       <ModalContent
-        borderRadius='0'
+        borderRadius='xl'
         bg={
           colorMode === 'dark' ?
             colors.dark :
