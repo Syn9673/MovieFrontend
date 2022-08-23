@@ -162,7 +162,14 @@ const getServerSideProps = async (context: GetServerSidePropsContext) => {
     s: season,
     e: episode,
     id
-  } = context.query
+  } = context.query,
+    token = getCookie(
+      'crackedflix-user-token',
+      {
+        req: context.req,
+        res: context.res
+      }
+    )
 
   // get video data
 
@@ -171,7 +178,7 @@ const getServerSideProps = async (context: GetServerSidePropsContext) => {
       `${process.env.API_URL}/video/${id}`,
       {
         headers: {
-          Authorization: getCookie('crackedflix-user-token') as string
+          authorization: token?.toString() ?? ''
         }
       }
     )
