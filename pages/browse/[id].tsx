@@ -171,7 +171,7 @@ const getServerSideProps = async (context: GetServerSidePropsContext) => {
       `${process.env.API_URL}/video/${id}`,
       {
         headers: {
-          Authorization: getCookie('crackedflix-user-token')
+          Authorization: getCookie('crackedflix-user-token') as string
         }
     )
 
