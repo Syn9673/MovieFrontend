@@ -173,6 +173,7 @@ const getServerSideProps = async (context: GetServerSidePropsContext) => {
         headers: {
           Authorization: getCookie('crackedflix-user-token') as string
         }
+      }
     )
 
     return {
