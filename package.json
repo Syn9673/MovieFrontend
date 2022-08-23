@@ -17,6 +17,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
+    "@paypal/react-paypal-js": "^7.8.1",
     "axios": "^0.27.2",
     "cookies-next": "^2.1.1",
     "framer-motion": "^7.0.0",

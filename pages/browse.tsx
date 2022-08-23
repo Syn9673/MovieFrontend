@@ -25,6 +25,7 @@ import { GetServerSideProps } from 'next'
 
 import ChangeTheme from '../components/ChangeTheme'
 import ContentModal from '../components/ContentModal'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons'
 

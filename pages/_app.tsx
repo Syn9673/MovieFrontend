@@ -17,6 +17,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css'
 import { useEffect, useState } from 'react'
 
 import colors from '../src/colors'
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 
 const config = {
     initialColorMode: 'dark',
@@ -27,8 +28,8 @@ const config = {
       config,
       styles: {
         global: (props: StyleFunctionProps) => ({
-          body: {
-            bg: props.colorMode === 'dark' ? colors.dark : 'gray.200'
+          'html, body': {
+            background: props.colorMode === 'dark' ? colors.dark : 'gray.200'
           }
         })
       },
@@ -79,24 +80,32 @@ const App = (
       </Head>
 
       <ChakraProvider theme={theme}>
-        {
-          hasLoaded ? (
-            <Component {...pageProps} />
-          ) : (
-            <Box
-              height='100vh'
-              display='flex'
-              flexDirection='column'
-              justifyContent='center'
-              alignItems='center'
-            >
-              <Spinner color='purple.500' size='xl' thickness='4px' />
-              <Text>
-                Loading...
-              </Text>
-            </Box>
-          )
-        }
+        <PayPalScriptProvider
+          options={
+            {
+              'client-id': process.env.PAYPAL_CLIENT_ID ?? ''
+            } 
+          }
+        >
+          {
+            hasLoaded ? (
+              <Component {...pageProps} />
+            ) : (
+              <Box
+                height='100vh'
+                display='flex'
+                flexDirection='column'
+                justifyContent='center'
+                alignItems='center'
+              >
+                <Spinner color='purple.500' size='xl' thickness='4px' />
+                <Text>
+                  Loading...
+                </Text>
+              </Box>
+            )
+          }
+          </PayPalScriptProvider>
       </ChakraProvider>
     </>
   )

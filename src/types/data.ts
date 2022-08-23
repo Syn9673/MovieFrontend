@@ -59,6 +59,14 @@ interface VideoData {
   badges: string[]
 }
 
+interface Plan {
+  price: string
+  name: string
+
+  tier: number
+  features: string[]
+}
+
 export type {
   SeriesData,
   EpisodeData,
@@ -71,4 +79,6 @@ export type {
 
   VideomageData,
   VideoMiscData,
+
+  Plan
 }

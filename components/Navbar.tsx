@@ -1,14 +1,26 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 
-import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faCaretDown, faSearch } from '@fortawesome/free-solid-svg-icons'
 import styles from '../styles/Navbar.module.sass'
 
 import Link from 'next/link'
-import { Box, useColorMode } from '@chakra-ui/react'
+import {
+  Box,
+  Menu,
+  MenuButton,
+  MenuGroup,
+  useColorMode,
+  MenuList,
+  MenuItem,
+  MenuDivider
+} from '@chakra-ui/react'
 
 import colors from '../src/colors'
 import { NavbarProps } from '../src/types/components'
+
+import Router from 'next/router'
+import { deleteCookie } from 'cookies-next'
 
 const Navbar = (
   {
@@ -23,7 +35,12 @@ const Navbar = (
     { colorMode } = useColorMode(),
     onScroll = () => setNavNotSeen(
       !(window.scrollY <= (ref.current?.clientHeight ?? 0))
-    )
+    ),
+    logout = () => {
+      deleteCookie('crackedflix-user-token')
+      Router.push('/auth')
+    },
+    purchase = () => Router.push('/payments')
 
   useEffect(
     () => {
@@ -70,10 +87,28 @@ const Navbar = (
             onClick={onClickSearch}
           />
         </Box>
+        
+        <Menu>
+          <MenuButton as={Box}>
+            <FontAwesomeIcon icon={faCaretDown} />
+          </MenuButton>
 
-        <Box>
-          <FontAwesomeIcon icon={faBars} />
-        </Box>
+          <MenuList fontSize='md' color='initial'>
+            <MenuGroup>
+              <MenuItem onClick={purchase}>
+                Purchase Plans
+              </MenuItem>
+            </MenuGroup>
+
+            <MenuDivider />
+
+            <MenuGroup>
+              <MenuItem onClick={logout}>
+                Logout
+              </MenuItem>
+            </MenuGroup>
+          </MenuList>
+        </Menu>
       </Box>
     </Box>
   )
