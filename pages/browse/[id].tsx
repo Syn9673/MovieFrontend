@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { GetServerSidePropsContext } from 'next'
 import { useEffect, useState } from 'react'
 
 import Video from '../../components/video'
@@ -7,6 +6,9 @@ import {
   VideoData,
   SeriesData
 } from '../../src/types/data'
+
+import { GetServerSidePropsContext } from 'next'
+import { getCookie } from 'cookies-next'
 
 const WatchVideo = (
   props: {
@@ -165,7 +167,13 @@ const getServerSideProps = async (context: GetServerSidePropsContext) => {
   // get video data
 
   try {
-    const res = await axios(`${process.env.API_URL}/video/${id}`)
+    const res = await axios(
+      `${process.env.API_URL}/video/${id}`,
+      {
+        headers: {
+          Authorization: getCookie('crackedflix-user-token')
+        }
+    )
 
     return {
       props: {
