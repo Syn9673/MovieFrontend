@@ -170,12 +170,15 @@ const ContentModal = (
 
         <ModalFooter>
           <CustomButton
-            color='green'
+            color={data?.available ? 'green' : 'red'}
             fullWidth
             centered
             onClick={onClickPlay}
+            disabled={!data?.available}
           >
-            Play
+            {
+              data?.available ? 'Play' : 'Coming Soon'
+            }
           </CustomButton>
         </ModalFooter>
       </ModalContent>

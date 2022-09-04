@@ -38,13 +38,15 @@ const Payments = (
     >
       <ChangeTheme />
 
-      <Heading size='2xl'>
+      <Heading size='2xl' textAlign='center'>
         Choose a Plan
       </Heading>
 
       <Flex
         wrap='wrap'
         gap='5'
+        justify='center'
+        align='center'
       >
         {
           plans.length > 0 ? (

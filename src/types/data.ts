@@ -59,6 +59,45 @@ interface VideoData {
   badges: string[]
 }
 
+interface LibraryContent {
+  videoId: string
+  public?: boolean
+}
+
+enum UserTiers {
+  FREE,
+  PREM_1,
+  PREM_2,
+  ADMIN
+}
+
+interface PaymentData {
+  name: string
+  id: string
+
+  email: string
+  tier: UserTiers
+
+  purchasedAt: number
+}
+
+interface User {
+  username: string
+  username_l: string
+
+  email: string
+  password: string
+
+  library: LibraryContent[]
+  tier: UserTiers
+
+  _id?: string
+  state: number
+
+  payments: PaymentData[]
+  tierExpir: number
+}
+
 interface Plan {
   price: string
   name: string
@@ -80,5 +119,11 @@ export type {
   VideomageData,
   VideoMiscData,
 
+  LibraryContent,
+  UserTiers,
+
+  PaymentData,
+  User,
+  
   Plan
 }

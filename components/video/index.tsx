@@ -259,6 +259,7 @@ const Video = (
                   className={styles.captions}
                   bottom={bottomControlsHeight ?? 0}
                 >
+                  {/* Testing Captions. 123. This is a test. */ }
                   <pre>
                     {captionsValue}
                   </pre>

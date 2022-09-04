@@ -266,10 +266,9 @@ const getServerSideProps: GetServerSideProps = async (context) => {
     const res = await axios(
         `${process.env.API_URL}/videos`,
         { headers: { authorization: token?.toString() ?? '' } }
-      )
+      ), 
+      content = res.data?.value as VideoData[]
 
-      const content = res.data?.value as VideoData[]
-      
     return { props: { content } }
   } catch(err) {  
     const e = err as any

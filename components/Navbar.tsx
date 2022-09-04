@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 
-import { faCaretDown, faSearch } from '@fortawesome/free-solid-svg-icons'
+import { faCaretDown, faSearch, faUserCircle } from '@fortawesome/free-solid-svg-icons'
 import styles from '../styles/Navbar.module.sass'
 
 import Link from 'next/link'
@@ -13,14 +13,18 @@ import {
   useColorMode,
   MenuList,
   MenuItem,
-  MenuDivider
+  MenuDivider,
+  Flex
 } from '@chakra-ui/react'
 
 import colors from '../src/colors'
 import { NavbarProps } from '../src/types/components'
 
 import Router from 'next/router'
-import { deleteCookie } from 'cookies-next'
+import { deleteCookie, getCookie } from 'cookies-next'
+
+import { User } from '../src/types/data'
+import Api from '../src/api'
 
 const Navbar = (
   {
@@ -30,20 +34,46 @@ const Navbar = (
     noTransparent
   }: NavbarProps
 ) => {
+  // states
   const [navNotSeen, setNavNotSeen] = useState(false),
-    ref = useRef<HTMLDivElement>(null),
-    { colorMode } = useColorMode(),
-    onScroll = () => setNavNotSeen(
+    [user, setUser] = useState<User>(),
+    { colorMode } = useColorMode()
+
+  // refs
+  const ref = useRef<HTMLDivElement>(null)
+
+  // callbacks
+  const onScroll = () => setNavNotSeen(
       !(window.scrollY <= (ref.current?.clientHeight ?? 0))
     ),
     logout = () => {
       deleteCookie('crackedflix-user-token')
       Router.push('/auth')
     },
-    purchase = () => Router.push('/payments')
+    login = () => Router.push('/auth'),
+    purchase = () => Router.push('/payments'),
+    userPage = () => Router.push('/user')
 
   useEffect(
     () => {
+      const token = getCookie('crackedflix-user-token') as string
+      if (token && !user) {
+        (
+          async() => {
+            const userData = await Api.call(
+              {
+                url: process.env.API_URL + '/user',
+                method: 'GET',
+                token
+              }
+            ) as User
+
+            if (userData)
+              setUser(userData)
+          }
+        )()
+      }
+
       window.addEventListener('scroll', onScroll)
       return () => window.removeEventListener('scroll', onScroll)
     },
@@ -94,19 +124,47 @@ const Navbar = (
           </MenuButton>
 
           <MenuList fontSize='md' color='initial'>
-            <MenuGroup>
-              <MenuItem onClick={purchase}>
-                Purchase Plans
-              </MenuItem>
-            </MenuGroup>
+            {
+              user ? (
+                <>
+                  <MenuGroup>
+                    <MenuItem onClick={userPage}>
+                      <Flex
+                        justify='center'
+                        align='center'
+                        gap='2'
+                      >
+                        <FontAwesomeIcon icon={faUserCircle} />
 
-            <MenuDivider />
+                        {user.username}
+                      </Flex>
+                    </MenuItem>
+                  </MenuGroup>
 
-            <MenuGroup>
-              <MenuItem onClick={logout}>
-                Logout
-              </MenuItem>
-            </MenuGroup>
+                  <MenuGroup>
+                    <MenuItem onClick={purchase}>
+                      Purchase Plans
+                    </MenuItem>
+                  </MenuGroup>
+
+                  <MenuDivider />
+
+                  <MenuGroup>
+                    <MenuItem onClick={logout}>
+                      Logout
+                    </MenuItem>
+                  </MenuGroup>
+                </>
+              ) : (
+                <>
+                  <MenuGroup>
+                    <MenuItem onClick={login}>
+                      Login
+                    </MenuItem>
+                  </MenuGroup>
+                </>
+              )
+            }
           </MenuList>
         </Menu>
       </Box>

@@ -93,6 +93,14 @@ interface ContentModalProps {
   season?: string | number
 }
 
+interface APIOptions {
+  url: string
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE'
+
+  token?: string
+  captcha?: string
+}
+
 export type {
   VideoProps,
   VideoTimerProps,
@@ -104,5 +112,7 @@ export type {
   SearchProps,
 
   CustomSliderProps,
-  ContentModalProps
+  ContentModalProps,
+
+  APIOptions
 }

@@ -77,6 +77,12 @@ const App = (
       <Head>
         <title>CrackedFlix</title>
         <meta name="viewport" content="initial-scale = 1.0,maximum-scale = 1.0" />
+
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-${process.env.ADSENSE_CLIENT_ID}`}
+          crossOrigin='anonymous'
+        />
       </Head>
 
       <ChakraProvider theme={theme}>
